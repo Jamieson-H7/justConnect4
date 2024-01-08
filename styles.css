@@ -1,0 +1,92 @@
+html{
+    --currentPlayerColor: rgb(60, 138, 118);
+    --currentPlayerColorDimmed: rgb(183, 214, 206);
+    --baseCellColor: #fff;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(7, 80px);
+    /* Adjust the number of columns as needed */
+    gap: 5px;
+    background-color: #3498db;
+    padding: 10px;
+    border-radius: 10px;
+}
+.aboveContainer {
+    display: grid;
+    grid-template-columns: repeat(7, 80px);
+    /* Adjust the number of columns as needed */
+    gap: 5px;
+    background-color: #ffffff00;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.cell {
+    width: 80px;
+    height: 80px;
+    background-color: var(--baseCellColor);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #3498db;
+    transition: background-color 0.3s ease;
+}
+.hiddenCell {
+    width: 80px;
+    height: 80px;
+    background-color: var(--currentPlayerColor);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #3498db;
+    transition: opacity 0.15s ease-in-out, transform 0.3s ease-out;
+}
+
+.cell:hover {
+    background-color: #eed8d5;
+}
+
+.clickable{
+    cursor: pointer;
+}
+
+.clickable:hover {
+    background-color: #c0f7ee;
+}
+
+.otherHover{
+    background-color: var(--currentPlayerColorDimmed);
+    transform: scale(0.9);
+}
+.taken{
+    outline: solid rgb(53, 53, 63) 2.5px
+}
+
+/* Customize player discs */
+.player1 {
+    color: #e74c3c;
+}
+
+.player2 {
+    color: #27ae60;
+}
+
+/* Add additional styles for game messages, etc. */
