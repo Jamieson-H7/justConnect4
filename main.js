@@ -3,6 +3,8 @@ var gameBoard;
 var aboveGameBoard;
 var cells = [];
 var hiddenCells = [];
+var currentPlayer = 1;
+var r = document.querySelector(':root');
 
 document.addEventListener("click", (e)=>{
     for(var arr of cells){
@@ -10,16 +12,109 @@ document.addEventListener("click", (e)=>{
             let item = arr[j];
             if(item.isEqualNode(e.target)){
                 // item.innerText = j;
-                findLowestAvailable(cells, j).classList.add("taken")
+                let row = findLowestAvailable(cells, j);
+                let lowest = cells[row][j]
+                lowest.classList.add("taken");
+                lowest.classList.add(currentPlayer==1 ? "player1" : "player2");
+
+                if(checkForConnect4(cells, currentPlayer, row, j)){
+                    selfDestruct()
+                }
+
+                currentPlayer = currentPlayer == 1 ? 2 : 1;
+                r.style.setProperty('--currentPlayerColor', currentPlayer == 1 ? 'rgb(60, 138, 118)' : 'rgb(231, 42, 32)');
             }
         }
     }
+    console.log(cells)
 })
+
+// return true if someone has won
+function checkForConnect4(cells, currentPlayer,  row, col){
+    // Left Right
+    let i = col;
+    do{
+        i++;
+    } while (i>=0 && i<cells[row].length && cells[row][i].classList.contains("player"+currentPlayer))
+    let counter = 0;
+    i--;
+    while (i>=0 && i<cells[row].length && cells[row][i].classList.contains("player"+currentPlayer)){
+        counter++;
+        i--;
+    }
+
+    if(counter>=4){
+        // hasWon = true;
+        return true;
+    }
+    // Up down
+    i = row;
+    do{
+        i++;
+    } while (i>=0 && i<cells.length && cells[i][col].classList.contains("player"+currentPlayer))
+    counter = 0;
+    i--;
+    while (i>=0 && i<cells.length && cells[i][col].classList.contains("player"+currentPlayer)){
+        counter++;
+        i--;
+    }
+    if(counter>=4){
+        return true;
+    }
+    // bottom left to top right
+    i = row; // row
+    k = col; // col
+    do{
+        i++;
+        k--;
+    } while (i>=0 && i<cells.length && k>=0 && k<cells[0].length && cells[i][k].classList.contains("player"+currentPlayer))
+    counter = 0;
+    i--;
+    k++;
+    while (i>=0 && i<cells.length && k>=0 && k<cells[0].length && cells[i][k].classList.contains("player"+currentPlayer)){
+        counter++;
+        i--;
+        k++;
+    }
+    
+    if(counter>=4){
+        return true;
+    }
+    // top left to bottom right
+    i = row; // row
+    k = col; // col
+    do{
+        i--;
+        k--;
+    } while (i>=0 && i<cells.length && k>=0 && k<cells[0].length && cells[i][k].classList.contains("player"+currentPlayer))
+    counter = 0;
+    i++;
+    k++;
+    while (i>=0 && i<cells.length && k>=0 && k<cells[0].length && cells[i][k].classList.contains("player"+currentPlayer)){
+        counter++;
+        i++;
+        k++;
+    }
+
+    if(counter>=4){
+        return true;
+    }
+    return false;
+}
+
+function selfDestruct(){
+    let temp = document.getElementById("mainDiv")
+    temp.innerHTML = "<div>player " + currentPlayer + " wins,</div><br/><button onclick = \"refreshPage()\">Play again?</button>"
+}
+
+function refreshPage(){
+    location.reload();
+}
 
 function findLowestAvailable(array2d, col){
     for(var i = array2d.length-1; i >= 0; i--){
         if(!(array2d[i][col].classList.contains("taken"))){
-            return array2d[i][col];
+            return i;
         }
     }
     return null;
@@ -67,7 +162,9 @@ function main(){
                             }
                             hiddenCells[j].style.opacity = "1";
                             hiddenCells[j].style.transform = "translate(0,0px)"
-                            findLowestAvailable(cells, j).classList.add("otherHover")
+                            let row = findLowestAvailable(cells, j);
+                            let lowest = cells[row][j];
+                            lowest.classList.add("otherHover")
                         }
                     }
                 }
